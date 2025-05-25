@@ -19,6 +19,7 @@ const parsePagination = (query) => {
 // Crear casa
 // ────────────────────────────────────────────────────────────────────────────────
 const createHouse = async (req, res, next) => {
+  console.log('📥 req.file:', req.file);
   const t = await sequelize.transaction();
   try {
     const { name, location, description, price, capacity } = req.body;
@@ -91,6 +92,7 @@ const getHouseById = async (req, res, next) => {
 // Actualizar casa
 // ────────────────────────────────────────────────────────────────────────────────
 const updateHouse = async (req, res, next) => {
+  console.log('📥 req.file:', req.file);
   const t = await sequelize.transaction();
   try {
     const { id } = req.params;

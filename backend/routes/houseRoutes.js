@@ -1,23 +1,25 @@
 const express = require('express');
-const { 
+const {
   createHouse,
-  getAllHouses, 
-  getHouseById, 
-  updateHouse, 
+  getAllHouses,
+  getHouseById,
+  updateHouse,
 } = require('../controllers/houseController');
 const authenticate = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
+
 const router = express.Router();
 
-// Ruta para añadir una casa
-router.post('/houses', authenticate, createHouse);
+// Crear casa (con imagen)
+router.post('/houses', authenticate, upload.single('image'), createHouse);
 
-// Ruta para listar todas las casas
+// Listar casas
 router.get('/houses', getAllHouses);
 
-// Ruta para obtener los detalles de una casa específica
+// Obtener casa específica
 router.get('/houses/:id', getHouseById);
 
-// Ruta para actualizar la información de una casa
-router.put('/houses/:id', authenticate, updateHouse);
+// Actualizar casa (con imagen)
+router.put('/houses/:id', authenticate, upload.single('image'), updateHouse);
 
 module.exports = router;
