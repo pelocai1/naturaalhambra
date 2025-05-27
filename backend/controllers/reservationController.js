@@ -192,6 +192,57 @@ const deleteCancelledUnconfirmed = async (req, res) => {
   }
 };
 
+const filterReservations = async (req, res) => {
+  console.log("FILTER ROUTE HIT");
+  try {
+    const { user, house, startDate, endDate } = req.body;
+
+    const where = {};
+    const userWhere = {};
+    const houseWhere = {};
+
+    if (startDate) {
+      where.startDate = { [Op.gte]: new Date(startDate) };
+    }
+
+    if (endDate) {
+      where.endDate = where.endDate || {};
+      where.endDate[Op.lte] = new Date(endDate);
+    }
+
+    if (user) {
+      userWhere.name = { [Op.iLike]: `%${user}%` };
+    }
+
+    if (house) {
+      houseWhere.name = { [Op.iLike]: `%${house}%` };
+    }
+
+    const reservations = await Reservation.findAll({
+      where,
+      include: [
+        {
+          model: User,
+          where: user ? userWhere : undefined,
+          attributes: ["name", "email"],
+        },
+        {
+          model: House,
+          where: house ? houseWhere : undefined,
+          attributes: ["name", "location"],
+        },
+      ],
+    });
+
+    res.status(200).json({ reservations });
+  } catch (error) {
+    console.error("Error al filtrar reservas:", error);
+    res
+      .status(500)
+      .json({ message: "Error al filtrar reservas", error: error.message });
+  }
+};
+
 // Simulación de pago y envío de correo
 const simulatePayment = async (req, res) => {
   const { id } = req.params;
@@ -301,4 +352,5 @@ module.exports = {
   updateReservation,
   simulatePayment,
   deleteCancelledUnconfirmed,
+  filterReservations,
 };

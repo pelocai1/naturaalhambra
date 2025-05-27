@@ -8,7 +8,8 @@ const {
   getHouseReservations,
   simulatePayment,
   updateReservation,
-  deleteCancelledUnconfirmed, // ✅
+  deleteCancelledUnconfirmed,
+  filterReservations,
 } = require("../controllers/reservationController");
 
 const authenticate = require("../middleware/authMiddleware");
@@ -37,6 +38,8 @@ router.post("/", authenticate, createReservation);
 router.put("/:id/cancel", authenticate, cancelReservation);
 
 router.post("/pagar/:id", simulatePayment);
+
+router.post("/admin/filter", authenticate, authorizeAdmin, filterReservations);
 
 router.delete(
   "/admin/clean-cancelled",

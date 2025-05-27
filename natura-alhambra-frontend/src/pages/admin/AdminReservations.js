@@ -5,6 +5,13 @@ function AdminReservations() {
   const [reservations, setReservations] = useState([]);
   const [message, setMessage] = useState("");
 
+  const [filters, setFilters] = useState({
+    user: "",
+    house: "",
+    startDate: "",
+    endDate: "",
+  });
+
   const fetchReservations = async () => {
     try {
       const res = await api.get("/admin/reservations");
@@ -26,6 +33,16 @@ function AdminReservations() {
     }
   };
 
+  const handleFilter = async () => {
+    try {
+      const res = await api.post("/reservations/admin/filter", filters);
+      setReservations(res.data.reservations || []);
+    } catch {
+      setMessage("Error al filtrar reservas");
+      setTimeout(() => setMessage(""), 2000);
+    }
+  };
+
   useEffect(() => {
     fetchReservations();
   }, []);
@@ -33,6 +50,56 @@ function AdminReservations() {
   return (
     <div>
       <h4 className="mb-4">Reservas registradas</h4>
+
+      <div className="card p-3 mb-4 shadow-sm">
+        <h5>Filtrar reservas</h5>
+        <div className="row">
+          <div className="col-md-3 mb-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Usuario"
+              value={filters.user}
+              onChange={(e) => setFilters({ ...filters, user: e.target.value })}
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Casa"
+              value={filters.house}
+              onChange={(e) =>
+                setFilters({ ...filters, house: e.target.value })
+              }
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="date"
+              className="form-control"
+              value={filters.startDate}
+              onChange={(e) =>
+                setFilters({ ...filters, startDate: e.target.value })
+              }
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="date"
+              className="form-control"
+              value={filters.endDate}
+              onChange={(e) =>
+                setFilters({ ...filters, endDate: e.target.value })
+              }
+            />
+          </div>
+        </div>
+        <button className="btn btn-primary mt-2" onClick={handleFilter}>
+          Buscar
+        </button>
+      </div>
+
       <div className="mb-3">
         <button
           className="btn btn-danger"
@@ -57,6 +124,7 @@ function AdminReservations() {
           Eliminar reservas canceladas sin confirmar
         </button>
       </div>
+
       {message && <div className="alert alert-info">{message}</div>}
 
       {reservations.map((r) => (
