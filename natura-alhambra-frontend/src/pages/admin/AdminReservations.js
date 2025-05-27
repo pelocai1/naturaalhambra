@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../services/api';
+import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 
 function AdminReservations() {
   const [reservations, setReservations] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const fetchReservations = async () => {
     try {
-      const res = await api.get('/admin/reservations');
+      const res = await api.get("/admin/reservations");
       setReservations(res.data.reservations || []);
     } catch {
       setReservations([]);
@@ -18,11 +18,11 @@ function AdminReservations() {
     try {
       await api.put(`/admin/reservations/${id}`, { [field]: value });
       fetchReservations();
-      setMessage('Reserva actualizada con éxito');
-      setTimeout(() => setMessage(''), 2000);
+      setMessage("Reserva actualizada con éxito");
+      setTimeout(() => setMessage(""), 2000);
     } catch {
-      setMessage('Error al actualizar la reserva');
-      setTimeout(() => setMessage(''), 2000);
+      setMessage("Error al actualizar la reserva");
+      setTimeout(() => setMessage(""), 2000);
     }
   };
 
@@ -33,6 +33,30 @@ function AdminReservations() {
   return (
     <div>
       <h4 className="mb-4">Reservas registradas</h4>
+      <div className="mb-3">
+        <button
+          className="btn btn-danger"
+          onClick={async () => {
+            try {
+              const confirm = window.confirm(
+                "¿Eliminar todas las reservas canceladas no confirmadas?"
+              );
+              if (!confirm) return;
+              const res = await api.delete(
+                "/reservations/admin/clean-cancelled"
+              );
+              setMessage(res.data.message);
+              fetchReservations();
+            } catch {
+              setMessage("Error al eliminar reservas canceladas");
+            } finally {
+              setTimeout(() => setMessage(""), 3000);
+            }
+          }}
+        >
+          Eliminar reservas canceladas sin confirmar
+        </button>
+      </div>
       {message && <div className="alert alert-info">{message}</div>}
 
       {reservations.map((r) => (
@@ -49,8 +73,10 @@ function AdminReservations() {
                 <input
                   type="date"
                   className="form-control"
-                  value={r.startDate.split('T')[0]}
-                  onChange={(e) => handleUpdate(r.id, 'startDate', e.target.value)}
+                  value={r.startDate.split("T")[0]}
+                  onChange={(e) =>
+                    handleUpdate(r.id, "startDate", e.target.value)
+                  }
                 />
               </div>
               <div className="col-md-4 mb-2">
@@ -58,8 +84,10 @@ function AdminReservations() {
                 <input
                   type="date"
                   className="form-control"
-                  value={r.endDate.split('T')[0]}
-                  onChange={(e) => handleUpdate(r.id, 'endDate', e.target.value)}
+                  value={r.endDate.split("T")[0]}
+                  onChange={(e) =>
+                    handleUpdate(r.id, "endDate", e.target.value)
+                  }
                 />
               </div>
               <div className="col-md-4 mb-2">
@@ -67,7 +95,7 @@ function AdminReservations() {
                 <select
                   className="form-select"
                   value={r.status}
-                  onChange={(e) => handleUpdate(r.id, 'status', e.target.value)}
+                  onChange={(e) => handleUpdate(r.id, "status", e.target.value)}
                 >
                   <option value="pending">Pendiente</option>
                   <option value="confirmed">Confirmada</option>

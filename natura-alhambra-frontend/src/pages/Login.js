@@ -26,8 +26,8 @@ function Login() {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <div className="card p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
-        <h3 className="mb-3 text-center">Iniciar Sesión</h3>
+      <div className="card p-4 shadow-sm" style={{ maxWidth: '400px', width: '100%' }}>
+        <h3 className="mb-4 text-center">Iniciar sesión</h3>
 
         {error && <div className="alert alert-danger">{error}</div>}
 
@@ -39,6 +39,7 @@ function Login() {
               className="form-control"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="usuario@ejemplo.com"
               required
             />
           </div>
@@ -50,11 +51,14 @@ function Login() {
               className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="********"
               required
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Entrar</button>
+          <div className="d-grid">
+            <button type="submit" className="btn btn-success">Entrar</button>
+          </div>
         </form>
       </div>
     </div>

@@ -1,20 +1,20 @@
-import React, { useEffect, useState, useContext } from 'react';
-import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
+import React, { useEffect, useState, useContext } from "react";
+import api from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 function UserReservations() {
   const { user } = useContext(AuthContext);
   const [reservations, setReservations] = useState([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const fetchReservations = async () => {
     try {
       const res = await api.get(`/reservations/user/${user.id}`);
       setReservations(res.data.reservations);
-      setError('');
+      setError("");
     } catch (err) {
-      setError('No se pudieron cargar tus reservas');
+      setError("No se pudieron cargar tus reservas");
     }
   };
 
@@ -27,12 +27,26 @@ function UserReservations() {
   const handleCancel = async (id) => {
     try {
       await api.put(`/reservations/${id}/cancel`);
-      setSuccess('Reserva cancelada con éxito');
-      setError('');
+      setSuccess("Reserva cancelada con éxito");
+      setError("");
       fetchReservations();
     } catch {
-      setError('Error al cancelar la reserva');
-      setSuccess('');
+      setError("Error al cancelar la reserva");
+      setSuccess("");
+    }
+  };
+
+  const handlePayment = async (id) => {
+    try {
+      await api.post(`/reservations/pagar/${id}`);
+      setSuccess(
+        "Pago realizado con éxito. Revisa tu correo para ver el código de acceso."
+      );
+      setError("");
+      fetchReservations(); // Actualiza el estado a "confirmed"
+    } catch (err) {
+      setError("Error al procesar el pago");
+      setSuccess("");
     }
   };
 
@@ -52,18 +66,30 @@ function UserReservations() {
               <h5 className="mb-1">{r.House?.name}</h5>
               <p className="mb-1">{r.House?.location}</p>
               <p className="mb-1">
-                <strong>Del:</strong> {new Date(r.startDate).toLocaleDateString()}<br />
+                <strong>Del:</strong>{" "}
+                {new Date(r.startDate).toLocaleDateString()}
+                <br />
                 <strong>Al:</strong> {new Date(r.endDate).toLocaleDateString()}
               </p>
-              <p className="mb-1"><strong>Estado:</strong> {r.status}</p>
+              <p className="mb-1">
+                <strong>Estado:</strong> {r.status}
+              </p>
 
-              {r.status === 'pending' && new Date(r.startDate) > new Date() && (
-                <button
-                  className="btn btn-outline-danger btn-sm mt-2"
-                  onClick={() => handleCancel(r.id)}
-                >
-                  Cancelar
-                </button>
+              {r.status === "pending" && new Date(r.startDate) > new Date() && (
+                <div className="d-flex gap-2 mt-2">
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => handlePayment(r.id)}
+                  >
+                    Pagar
+                  </button>
+                  <button
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => handleCancel(r.id)}
+                  >
+                    Cancelar
+                  </button>
+                </div>
               )}
             </div>
           ))}

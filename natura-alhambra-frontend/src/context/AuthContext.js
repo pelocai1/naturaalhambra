@@ -1,43 +1,53 @@
-import React, { createContext, useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
+import React, { createContext, useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-// Crear el contexto
 export const AuthContext = createContext();
 
-// Proveedor del contexto
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // ⏳ Estado de carga
+  const navigate = useNavigate();
 
-  // Cargar el usuario desde el almacenamiento local al iniciar la aplicación
+  const isTokenExpired = (token) => {
+    try {
+      const { exp } = jwt_decode(token);
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      try {
+      if (isTokenExpired(token)) {
+        logout(false); // 👇 No navegar si ya estamos cargando
+      } else {
         const decoded = jwt_decode(token);
         setUser(decoded);
-      } catch (error) {
-        console.error('Token inválido:', error);
-        localStorage.removeItem('token');
       }
     }
+    setLoading(false); // 🔚 Terminó la verificación
   }, []);
 
-  // Iniciar sesión y guardar el token
   const login = (token) => {
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
     const decoded = jwt_decode(token);
     setUser(decoded);
   };
 
-  // Cerrar sesión y limpiar el estado
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = (shouldNavigate = true) => {
+    localStorage.removeItem("token");
     setUser(null);
+    if (shouldNavigate) {
+      navigate("/login");
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

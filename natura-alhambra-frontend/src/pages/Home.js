@@ -1,33 +1,68 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/soloLogo.png'; // Ajusta ruta según ubicación real
+import { FaBed, FaMapMarkedAlt, FaHeadset, FaPaw } from 'react-icons/fa'; // Agregamos FaPaw
+import alhambraBg from '../assets/fondo.png';
 
 function Home() {
+  console.log('🏠 Componente Home renderizado');
+
   return (
-    <div className="container text-center mt-5">
-      <img
-        src={logo}
-        alt="Natura Alhambra logo"
-        className="mb-4"
-        style={{ maxWidth: '300px' }}
-      />
+    <>
+      {/* HERO principal */}
+      <div
+        className="text-white d-flex align-items-center justify-content-center text-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(34, 49, 34, 0.5), rgba(34, 49, 34, 0.5)), url(${alhambraBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '70vh',
+          paddingTop: '4rem',
+          paddingBottom: '4rem'
+        }}
+      >
+        <div className="container">
+          <h1 className="display-3 fw-bold">Natura Alhambra</h1>
+          <p className="lead mb-4">Casas rurales con encanto en Granada. Descansa, disfruta y desconecta.</p>
+          <Link to="/houses" className="btn btn-light btn-lg shadow-sm">
+            Explorar casas
+          </Link>
+        </div>
+      </div>
 
-      <h1 className="text-success mb-3" style={{ fontFamily: 'serif', fontWeight: 'bold' }}>
-        Natura Alhambra
-      </h1>
-      <p className="text-muted mb-4" style={{ letterSpacing: '2px' }}>
-        VIVE GRANADA
-      </p>
+      {/* Beneficios */}
+      <div className="container my-5">
+        <div className="row text-center">
+          <div className="col-md-3">
+            <FaBed size={40} className="mb-3" />
+            <h5>Comodidad asegurada</h5>
+            <p>Casas totalmente equipadas para tu descanso.</p>
+          </div>
+          <div className="col-md-3">
+            <FaMapMarkedAlt size={40} className="mb-3" />
+            <h5>Ubicación perfecta</h5>
+            <p>En el corazón de Granada y Sierra Nevada.</p>
+          </div>
+          <div className="col-md-3">
+            <FaHeadset size={40} className="mb-3" />
+            <h5>Atención personalizada</h5>
+            <p>Estamos disponibles para ayudarte en todo momento.</p>
+          </div>
+          <div className="col-md-3">
+            <FaPaw size={40} className="mb-3" />
+            <h5>Pet Friendly</h5>
+            <p>¡Tus mascotas son bienvenidas en nuestras casas rurales!</p>
+          </div>
+        </div>
+      </div>
 
-      <p className="lead">
-        Encuentra tu casa rural perfecta en plena naturaleza.  
-        Relájate, explora y desconecta en los rincones más auténticos de Granada.
-      </p>
-
-      <Link to="/houses" className="btn btn-outline-success btn-lg mt-3">
-        Ver casas disponibles
-      </Link>
-    </div>
+      {/* CTA final */}
+      <div className="bg-success text-white text-center py-5">
+        <h4>¿Tienes preguntas?</h4>
+        <p>Contáctanos y estaremos encantados de ayudarte.</p>
+        <Link to="/contact" className="btn btn-outline-light">Ir a contacto</Link>
+      </div>
+    </>
   );
 }
 

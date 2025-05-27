@@ -36,6 +36,10 @@ const Reservation = sequelize.define('Reservation', {
     type: DataTypes.ENUM('pending', 'confirmed', 'cancelled'),
     defaultValue: 'pending',
   },
+  accessCode: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
 }, {
   timestamps: true,
 });

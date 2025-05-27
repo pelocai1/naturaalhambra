@@ -21,12 +21,10 @@ function Navbar() {
 
       <div className="ms-auto">
         <ul className="navbar-nav d-flex align-items-center">
-          {/* Inicio solo para admin */}
-          {user?.role === 'admin' && (
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
-            </li>
-          )}
+          {/* Inicio para todos */}
+          <li className="nav-item">
+            <Link className="nav-link" to="/">Inicio</Link>
+          </li>
 
           {/* Casas solo para usuarios normales o no logueados */}
           {(!user || user.role === 'user') && (
@@ -57,7 +55,9 @@ function Navbar() {
           {/* Autenticación */}
           {user ? (
             <li className="nav-item">
-              <button className="btn btn-outline-danger btn-sm ms-2" onClick={handleLogout}>Cerrar sesión</button>
+              <button className="btn btn-outline-danger btn-sm ms-2" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
             </li>
           ) : (
             <>

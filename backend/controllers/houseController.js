@@ -51,12 +51,14 @@ const createHouse = async (req, res, next) => {
 // ────────────────────────────────────────────────────────────────────────────────
 const getAllHouses = async (req, res, next) => {
   try {
-    const { available, location } = req.query;
+    const { available, location, maxPrice, capacity } = req.query;
     const { page, limit, offset } = parsePagination(req.query);
 
     const where = {};
     if (available !== undefined) where.availability = available === 'true';
     if (location) where.location = { [Op.iLike]: `%${location}%` };
+    if (maxPrice) where.price = { [Op.lte]: maxPrice };
+    if (capacity) where.capacity = { [Op.gte]: capacity };
 
     const { rows: houses, count: total } = await House.findAndCountAll({
       where,
@@ -73,6 +75,7 @@ const getAllHouses = async (req, res, next) => {
     return next(error);
   }
 };
+
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Obtener casa por id

@@ -1,0 +1,29 @@
+body {
+  background-color: #f2f5f1; /* tono pastel suave */
+}
+
+body.default-background {
+  background-color: #f2f5f1;
+}
+
+.auth-background {
+  background-image: url('./assets/sierranevada.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.flex-grow-1 {
+  flex: 1;
+}
+
+.contact-overlay {
+  background-color: rgba(255, 255, 255, 0.5); /* blanco casi opaco */
+  backdrop-filter: blur(3px); /* si quieres un efecto más elegante */
+}

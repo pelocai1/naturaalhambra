@@ -1,14 +1,11 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Houses from '../pages/Houses';
-import HouseDetails from '../pages/HouseDetails';
-import UserReservations from '../pages/UserReservations';
-import PrivateRoute from '../components/PrivateRoute';
-import AdminPanel from '../pages/AdminPanel';
-import AdminRoute from '../components/AdminRoute';
+import { Routes, Route } from "react-router-dom";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import HouseDetails from "../pages/HouseDetails";
+import UserReservations from "../pages/UserReservations";
+import AdminPanel from "../pages/AdminPanel";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 function AppRouter() {
   return (
@@ -16,24 +13,29 @@ function AppRouter() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/houses" element={<Houses />} />
-      <Route path="/houses/:id" element={<HouseDetails />} />
 
-      {/* Rutas protegidas */}
       <Route
-        path="/reservations"
+        path="/casa/:id"
         element={
-          <PrivateRoute>
+          <ProtectedRoute>
+            <HouseDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mis-reservas"
+        element={
+          <ProtectedRoute>
             <UserReservations />
-          </PrivateRoute>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/admin"
         element={
-          <AdminRoute>
+          <ProtectedRoute adminOnly>
             <AdminPanel />
-          </AdminRoute>
+          </ProtectedRoute>
         }
       />
     </Routes>

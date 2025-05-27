@@ -29,8 +29,8 @@ const getHouseRating = async (req, res) => {
     const comments = await Comment.findAll({ where: { houseId } });
 
     if (comments.length === 0) {
-      return res.status(404).json({ message: 'No hay valoraciones para esta casa' });
-    }
+  return res.status(200).json({ averageRating: null, totalReviews: 0 });
+}
 
     const totalRatings = comments.reduce((acc, comment) => acc + comment.rating, 0);
     const averageRating = totalRatings / comments.length;

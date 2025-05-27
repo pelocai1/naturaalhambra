@@ -19,7 +19,7 @@ function Houses() {
     const fetchHouses = async () => {
       try {
         const res = await api.get('/houses');
-        const allHouses = res.data.houses || [];
+        const allHouses = res.data.data || [];
         setHouses(allHouses);
         setFiltered(allHouses);
 
@@ -33,21 +33,20 @@ function Houses() {
   }, []);
 
   const handleFilter = async () => {
-    try {
-      const res = await api.get('/houses', {
-        params: {
-          maxPrice,
-          location,
-          startDate,
-          endDate,
-          capacity
-        }
-      });
-      setFiltered(res.data.houses || []);
-    } catch {
-      setHouses([]);
-    }
-  };
+  try {
+    const filters = {};
+    if (maxPrice) filters.maxPrice = maxPrice;
+    if (location) filters.location = location;
+    if (startDate) filters.startDate = startDate;
+    if (endDate) filters.endDate = endDate;
+    if (capacity) filters.capacity = capacity;
+
+    const res = await api.get('/houses', { params: filters });
+    setFiltered(res.data.data || []);
+  } catch {
+    setFiltered([]);
+  }
+};
 
   return (
     <div className="container mt-4">
