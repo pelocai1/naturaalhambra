@@ -8,22 +8,22 @@ import "./App.css";
 function App() {
   const location = useLocation();
 
-  const isAuthPage =
-    location.pathname === "/login" ||
-    location.pathname === "/register" ||
-    location.pathname === "/contact";
+  // Define las rutas que quieres que tengan fondo especial
+  const isBackgroundPage = ["/login", "/register", "/contact"].includes(
+    location.pathname
+  );
 
   return (
     <div
       className={`app-wrapper d-flex flex-column min-vh-100 ${
-        isAuthPage ? "auth-background" : ""
+        isBackgroundPage ? "auth-background" : ""
       }`}
     >
-      {!isAuthPage && <Navbar />}
+      <Navbar />
       <div className="flex-grow-1">
         <AppRouter />
       </div>
-      {!isAuthPage && <Footer />}
+      <Footer />
     </div>
   );
 }

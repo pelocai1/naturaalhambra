@@ -1,7 +1,22 @@
+/* === Importación de fuentes elegantes === */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;500&display=swap');
+
+/* === Tipografía global === */
 body {
-  background-color: #f2f5f1; /* tono pastel suave */
+  font-family: 'Quicksand', sans-serif;
+  background-color: #f2f5f1;
+  color: #0c1d1e;
+}
+p, a, button {
+  background-color: transparent;
 }
 
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+  color: #2ba84a;
+}
+
+/* === Fondos reutilizables === */
 body.default-background {
   background-color: #f2f5f1;
 }
@@ -13,6 +28,7 @@ body.default-background {
   background-repeat: no-repeat;
 }
 
+/* === Layout general === */
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,7 +39,33 @@ body.default-background {
   flex: 1;
 }
 
+/* === Estilo para overlays (fondos borrosos suaves) === */
 .contact-overlay {
-  background-color: rgba(255, 255, 255, 0.5); /* blanco casi opaco */
-  backdrop-filter: blur(3px); /* si quieres un efecto más elegante */
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+/* === Botones personalizados === */
+.btn-custom {
+  background-color: #2ba84a;
+  color: white;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-custom:hover {
+  background-color: #228b3c;
+  transform: scale(1.05);
+}
+
+/* === Tarjetas con sombra moderna === */
+.card-modern {
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.card-modern:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
 }

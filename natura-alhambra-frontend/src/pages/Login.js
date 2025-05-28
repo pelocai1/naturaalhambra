@@ -1,32 +1,38 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const res = await api.post('/users/login', { email, password });
+      const res = await api.post("/users/login", { email, password });
       login(res.data.token);
-      navigate('/');
-    } catch (err) {
-      setError('Credenciales incorrectas o error del servidor');
+      navigate("/");
+    } catch {
+      setError("Credenciales incorrectas o error del servidor");
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <div className="card p-4 shadow-sm" style={{ maxWidth: '400px', width: '100%' }}>
+    <div
+      className="container d-flex justify-content-center align-items-center"
+      style={{ minHeight: "80vh" }}
+    >
+      <div
+        className="bg-white p-4 rounded-4 shadow-sm"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
         <h3 className="mb-4 text-center">Iniciar sesión</h3>
 
         {error && <div className="alert alert-danger">{error}</div>}
@@ -56,9 +62,9 @@ function Login() {
             />
           </div>
 
-          <div className="d-grid">
-            <button type="submit" className="btn btn-success">Entrar</button>
-          </div>
+          <button type="submit" className="btn btn-custom w-100">
+            Entrar
+          </button>
         </form>
       </div>
     </div>

@@ -19,6 +19,7 @@ function HouseDetails() {
   const [reservationMessage, setReservationMessage] = useState("");
   const [submitMessage, setSubmitMessage] = useState("");
   const [reservedDates, setReservedDates] = useState([]);
+
   const formatDateLocal = (date) => {
     const adjusted = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000
@@ -26,7 +27,6 @@ function HouseDetails() {
     return adjusted.toISOString().split("T")[0];
   };
 
-  // 🔄 Cargar todos los datos de la casa al montar
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +49,6 @@ function HouseDetails() {
     fetchData();
   }, [id]);
 
-  // ⛔ Fechas ocupadas (no seleccionables)
   const excludedIntervals = reservedDates.map((r) => {
     const start = new Date(r.startDate);
     const end = new Date(r.endDate);
@@ -67,7 +66,6 @@ function HouseDetails() {
     };
   });
 
-  // ✅ Comprobar que una fecha está disponible
   const isDateAvailable = (date) => {
     return !reservedDates.some((r) => {
       const start = new Date(r.startDate);
@@ -76,7 +74,6 @@ function HouseDetails() {
     });
   };
 
-  // 📝 Enviar comentario
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -96,7 +93,6 @@ function HouseDetails() {
     }
   };
 
-  // 📅 Enviar reserva
   const handleReservationSubmit = async (e) => {
     e.preventDefault();
     setReservationMessage("");
@@ -120,38 +116,11 @@ function HouseDetails() {
         return;
       }
 
-      console.log("FECHAS ENVIADAS:");
-      console.log("Inicio:", startDate.toISOString());
-      console.log("Fin:", endDate.toISOString());
-      console.log(
-        "Formato limpio:",
-        formatDateLocal(startDate),
-        formatDateLocal(endDate)
-      );
-
-      console.log({
-        userId: user?.id,
-        houseId: id,
-        startDate,
-        endDate,
-      });
-
       await api.post("/reservations", {
         userId: user.id,
         houseId: id,
-        startDate:
-          startDate.getFullYear() +
-          "-" +
-          String(startDate.getMonth() + 1).padStart(2, "0") +
-          "-" +
-          String(startDate.getDate()).padStart(2, "0"),
-
-        endDate:
-          endDate.getFullYear() +
-          "-" +
-          String(endDate.getMonth() + 1).padStart(2, "0") +
-          "-" +
-          String(endDate.getDate()).padStart(2, "0"),
+        startDate: formatDateLocal(startDate),
+        endDate: formatDateLocal(endDate),
       });
 
       setReservationMessage("Reserva realizada con éxito");
@@ -171,7 +140,7 @@ function HouseDetails() {
         <img
           src={house.imageUrl}
           alt={house.name}
-          className="img-fluid rounded mb-4"
+          className="img-fluid rounded-4 shadow mb-4"
           style={{ maxHeight: "400px", objectFit: "cover", width: "100%" }}
         />
       )}
@@ -194,13 +163,19 @@ function HouseDetails() {
 
       <h4 className="mt-4">Comentarios</h4>
       {comments.length > 0 ? (
-        <ul className="list-group mb-4">
+        <div className="row mb-4">
           {comments.map((c) => (
-            <li key={c.id} className="list-group-item">
-              <strong>{c.rating} ⭐</strong> – {c.comment}
-            </li>
+            <div key={c.id} className="col-md-6 mb-3">
+              <div className="card h-100 shadow-sm">
+                <div className="card-body">
+                  <p className="card-text">
+                    <strong>{c.rating} ⭐</strong> – {c.comment}
+                  </p>
+                </div>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No hay comentarios aún.</p>
       )}
@@ -208,7 +183,11 @@ function HouseDetails() {
       {user && (
         <>
           <h4>Deja tu comentario</h4>
-          <form onSubmit={handleCommentSubmit} className="mb-4">
+          <form
+            onSubmit={handleCommentSubmit}
+            className="mb-4"
+            style={{ maxWidth: "600px" }}
+          >
             <div className="mb-2">
               <label className="form-label">Valoración:</label>
               <select
@@ -236,25 +215,32 @@ function HouseDetails() {
             {submitMessage && (
               <div className="alert alert-info">{submitMessage}</div>
             )}
-            <button className="btn btn-primary">Enviar comentario</button>
+            <button className="btn btn-custom">Enviar comentario</button>
           </form>
 
           <h4>Fechas ocupadas</h4>
           {reservedDates.length === 0 ? (
             <p>No hay reservas actualmente.</p>
           ) : (
-            <ul className="list-group mb-3">
+            <div className="row mb-3">
               {reservedDates.map((r, i) => (
-                <li key={i} className="list-group-item">
-                  Del {formatDateLocal(new Date(r.startDate))} al{" "}
-                  {formatDateLocal(new Date(r.endDate))}
-                </li>
+                <div key={i} className="col-md-6 mb-2">
+                  <div className="card shadow-sm">
+                    <div className="card-body">
+                      Del {formatDateLocal(new Date(r.startDate))} al{" "}
+                      {formatDateLocal(new Date(r.endDate))}
+                    </div>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
 
           <h4>Reservar esta casa</h4>
-          <form onSubmit={handleReservationSubmit}>
+          <form
+            onSubmit={handleReservationSubmit}
+            style={{ maxWidth: "600px" }}
+          >
             <div className="mb-3">
               <label className="form-label">Fecha de entrada:</label>
               <DatePicker
@@ -280,7 +266,7 @@ function HouseDetails() {
             {reservationMessage && (
               <div className="alert alert-info">{reservationMessage}</div>
             )}
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-custom">
               Reservar
             </button>
           </form>

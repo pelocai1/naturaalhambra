@@ -1,10 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaBed, FaMapMarkedAlt, FaHeadset, FaPaw } from 'react-icons/fa'; // Agregamos FaPaw
-import alhambraBg from '../assets/fondo.png';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import alhambraBg from "../assets/fondo.png";
+import imgComodidad from "../assets/comodidad.jpg";
+import imgUbicacion from "../assets/ubicacion.jpg";
+import imgMascotas from "../assets/mascotas.jpg";
+import imgAtencion from "../assets/acceso.jpg";
 
 function Home() {
-  console.log('🏠 Componente Home renderizado');
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: false });
+
+    // 🔧 Fuerza recálculo al terminar el render
+    setTimeout(() => {
+      AOS.refresh();
+    }, 500);
+  }, []);
 
   return (
     <>
@@ -12,55 +24,157 @@ function Home() {
       <div
         className="text-white d-flex align-items-center justify-content-center text-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(34, 49, 34, 0.5), rgba(34, 49, 34, 0.5)), url(${alhambraBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          minHeight: '70vh',
-          paddingTop: '4rem',
-          paddingBottom: '4rem'
+          backgroundImage: `linear-gradient(rgba(12, 29, 30, 0.7), rgba(12, 29, 30, 0.7)), url(${alhambraBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "90vh",
+          paddingTop: "6rem",
+          paddingBottom: "6rem",
+          marginBottom: "6rem",
         }}
       >
         <div className="container">
-          <h1 className="display-3 fw-bold">Natura Alhambra</h1>
-          <p className="lead mb-4">Casas rurales con encanto en Granada. Descansa, disfruta y desconecta.</p>
-          <Link to="/houses" className="btn btn-light btn-lg shadow-sm">
+          <h1 className="display-2 fw-bold">NATURA ALHAMBRA</h1>
+
+          <p
+            className="lead mb-4"
+            style={{ backgroundColor: "transparent", color: "white" }}
+          >
+            VIVE GRANADA · Casas rurales con encanto · Naturaleza y descanso
+          </p>
+          <Link to="/houses" className="btn btn-custom btn-lg shadow">
             Explorar casas
           </Link>
         </div>
       </div>
-
-      {/* Beneficios */}
-      <div className="container my-5">
-        <div className="row text-center">
-          <div className="col-md-3">
-            <FaBed size={40} className="mb-3" />
-            <h5>Comodidad asegurada</h5>
-            <p>Casas totalmente equipadas para tu descanso.</p>
+      {/* SECCIÓN 1: Comodidad */}
+      <div className="container py-6" style={{ marginBottom: "6rem" }}>
+        <div className="row align-items-center">
+          <div
+            className="col-md-6"
+            data-aos="fade-right"
+            data-aos-offset="100"
+            data-aos-anchor-placement="top-center"
+          >
+            <img
+              src={imgComodidad}
+              alt="Comodidad"
+              className="img-fluid rounded-4 shadow"
+            />
           </div>
-          <div className="col-md-3">
-            <FaMapMarkedAlt size={40} className="mb-3" />
-            <h5>Ubicación perfecta</h5>
-            <p>En el corazón de Granada y Sierra Nevada.</p>
+          <div
+            className="col-md-6"
+            data-aos="fade-left"
+            data-aos-offset="50"
+            data-aos-anchor-placement="top-center"
+          >
+            <h2>Comodidad asegurada</h2>
+            <p>
+              Todas nuestras casas están equipadas con camas de calidad, cocinas
+              completas y espacios diseñados para tu descanso.
+            </p>
           </div>
-          <div className="col-md-3">
-            <FaHeadset size={40} className="mb-3" />
-            <h5>Atención personalizada</h5>
-            <p>Estamos disponibles para ayudarte en todo momento.</p>
+        </div>
+      </div>
+      {/* SECCIÓN 2: Ubicación */}
+      <div className="container py-6" style={{ marginBottom: "6rem" }}>
+        <div className="row align-items-center flex-md-row-reverse">
+          <div
+            className="col-md-6"
+            data-aos="fade-left"
+            data-aos-offset="100"
+            data-aos-anchor-placement="top-center"
+          >
+            <img
+              src={imgUbicacion}
+              alt="Ubicación"
+              className="img-fluid rounded-4 shadow"
+            />
           </div>
-          <div className="col-md-3">
-            <FaPaw size={40} className="mb-3" />
-            <h5>Pet Friendly</h5>
-            <p>¡Tus mascotas son bienvenidas en nuestras casas rurales!</p>
+          <div
+            className="col-md-6"
+            data-aos="fade-right"
+            data-aos-offset="50"
+            data-aos-anchor-placement="top-center"
+          >
+            <h2>Ubicación privilegiada</h2>
+            <p>
+              A un paso de la Alhambra y Sierra Nevada, descubre lo mejor de
+              Granada desde un entorno rural único.
+            </p>
+          </div>
+        </div>
+      </div>
+      {/* SECCIÓN 3: Pet Friendly */}
+      <div className="container py-6" style={{ marginBottom: "6rem" }}>
+        <div className="row align-items-center">
+          <div
+            className="col-md-6"
+            data-aos="fade-right"
+            data-aos-offset="100"
+            data-aos-anchor-placement="top-center"
+          >
+            <img
+              src={imgMascotas}
+              alt="Pet friendly"
+              className="img-fluid rounded-4 shadow"
+            />
+          </div>
+          <div
+            className="col-md-6"
+            data-aos="fade-left"
+            data-aos-offset="50"
+            data-aos-anchor-placement="top-center"
+          >
+            <h2>Pet Friendly</h2>
+            <p>
+              Trae a tus mascotas contigo. En Natura Alhambra, todos los
+              miembros de la familia son bienvenidos.
+            </p>
+          </div>
+        </div>
+      </div>
+      {/* SECCIÓN 4: Acceso autónomo y seguro */}
+      <div className="container py-6" style={{ marginBottom: "6rem" }}>
+        <div className="row align-items-center flex-md-row-reverse">
+          <div
+            className="col-md-6"
+            data-aos="fade-left"
+            data-aos-offset="100"
+            data-aos-anchor-placement="top-center"
+          >
+            <img
+              src={imgAtencion}
+              alt="Acceso"
+              className="img-fluid rounded-4 shadow"
+            />
+          </div>
+          <div
+            className="col-md-6"
+            data-aos="fade-right"
+            data-aos-offset="50"
+            data-aos-anchor-placement="top-center"
+          >
+            <h2>Acceso autónomo y seguro</h2>
+            <p>
+              Una vez confirmada tu reserva, recibirás un código personalizado
+              para acceder a tu casa sin esperas ni llaves físicas. Total
+              libertad, máxima comodidad.
+            </p>
           </div>
         </div>
       </div>
 
       {/* CTA final */}
-      <div className="bg-success text-white text-center py-5">
+      <div className="bg-dark text-white text-center py-5">
         <h4>¿Tienes preguntas?</h4>
-        <p>Contáctanos y estaremos encantados de ayudarte.</p>
-        <Link to="/contact" className="btn btn-outline-light">Ir a contacto</Link>
+        <p style={{ backgroundColor: "transparent", color: "white" }}>
+          Contáctanos y estaremos encantados de ayudarte.
+        </p>
+        <Link to="/contact" className="btn btn-outline-light mt-3">
+          Ir a contacto
+        </Link>
       </div>
     </>
   );

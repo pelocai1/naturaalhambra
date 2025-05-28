@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../services/api';
+import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const fetchUsers = async () => {
     try {
-      const res = await api.get('/admin/users');
+      const res = await api.get("/admin/users");
       setUsers(res.data.users || []);
     } catch {
       setUsers([]);
@@ -18,9 +18,11 @@ function AdminUsers() {
     try {
       await api.put(`/admin/users/${id}`, { [field]: value });
       fetchUsers();
-      setMessage('Usuario actualizado');
+      setMessage("Usuario actualizado");
+      setTimeout(() => setMessage(""), 2000);
     } catch {
-      setMessage('Error al actualizar usuario');
+      setMessage("Error al actualizar usuario");
+      setTimeout(() => setMessage(""), 2000);
     }
   };
 
@@ -29,35 +31,50 @@ function AdminUsers() {
   }, []);
 
   return (
-    <div>
-      <h4>Usuarios registrados</h4>
+    <div className="mt-4">
+      <h4 className="mb-4">Usuarios registrados</h4>
       {message && <div className="alert alert-info">{message}</div>}
-      <ul className="list-group">
+
+      <div className="row">
         {users.map((u) => (
-          <li key={u.id} className="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <strong>{u.name}</strong> – {u.email}<br />
-              Rol: {u.role} | Estado: {u.active ? 'Activo' : 'Inactivo'}
+          <div key={u.id} className="col-md-6 mb-4">
+            <div className="card shadow-sm h-100">
+              <div className="card-body d-flex flex-column justify-content-between">
+                <div className="mb-3">
+                  <h5 className="card-title mb-1">{u.name}</h5>
+                  <p className="text-muted mb-2">{u.email}</p>
+                  <p className="mb-0">
+                    <strong>Rol:</strong> {u.role} <br />
+                    <strong>Estado:</strong>{" "}
+                    <span className={u.active ? "text-success" : "text-danger"}>
+                      {u.active ? "Activo" : "Inactivo"}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="d-flex align-items-center gap-2">
+                  <select
+                    className="form-select form-select-sm"
+                    value={u.role}
+                    onChange={(e) => handleUpdate(u.id, "role", e.target.value)}
+                  >
+                    <option value="user">Usuario</option>
+                    <option value="admin">Administrador</option>
+                  </select>
+                  <button
+                    className={`btn btn-sm ${
+                      u.active ? "btn-danger" : "btn-success"
+                    }`}
+                    onClick={() => handleUpdate(u.id, "active", !u.active)}
+                  >
+                    {u.active ? "Desactivar" : "Activar"}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div>
-              <select
-                className="form-select form-select-sm me-2"
-                value={u.role}
-                onChange={(e) => handleUpdate(u.id, 'role', e.target.value)}
-              >
-                <option value="user">Usuario</option>
-                <option value="admin">Administrador</option>
-              </select>
-              <button
-                className={`btn btn-sm ${u.active ? 'btn-danger' : 'btn-success'}`}
-                onClick={() => handleUpdate(u.id, 'active', !u.active)}
-              >
-                {u.active ? 'Desactivar' : 'Activar'}
-              </button>
-            </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

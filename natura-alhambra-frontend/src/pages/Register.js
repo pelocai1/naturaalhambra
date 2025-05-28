@@ -9,7 +9,7 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "", // Nuevo campo
+    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
@@ -46,7 +46,6 @@ function Register() {
       setSuccess("Usuario registrado correctamente");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      console.log(err.response?.data); // 👈 Verás el mensaje del backend
       setError(err.response?.data?.error || "Error al registrar el usuario");
     }
   };
@@ -57,7 +56,7 @@ function Register() {
       style={{ minHeight: "80vh" }}
     >
       <div
-        className="card p-4 shadow-sm"
+        className="bg-white p-4 rounded-4 shadow-sm"
         style={{ maxWidth: "500px", width: "100%" }}
       >
         <h2 className="mb-4 text-center">Crear cuenta</h2>
@@ -100,6 +99,7 @@ function Register() {
               required
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Confirmar contraseña</label>
             <input
@@ -116,11 +116,9 @@ function Register() {
           {error && <div className="alert alert-danger">{error}</div>}
           {success && <div className="alert alert-success">{success}</div>}
 
-          <div className="d-grid">
-            <button type="submit" className="btn btn-success">
-              Registrarse
-            </button>
-          </div>
+          <button type="submit" className="btn btn-custom w-100">
+            Registrarse
+          </button>
         </form>
       </div>
     </div>

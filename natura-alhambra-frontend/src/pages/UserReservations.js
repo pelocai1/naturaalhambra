@@ -43,7 +43,7 @@ function UserReservations() {
         "Pago realizado con éxito. Revisa tu correo para ver el código de acceso."
       );
       setError("");
-      fetchReservations(); // Actualiza el estado a "confirmed"
+      fetchReservations();
     } catch (err) {
       setError("Error al procesar el pago");
       setSuccess("");
@@ -60,37 +60,44 @@ function UserReservations() {
       {reservations.length === 0 ? (
         <p>No tienes reservas registradas.</p>
       ) : (
-        <div className="list-group">
+        <div className="row">
           {reservations.map((r) => (
-            <div key={r.id} className="list-group-item mb-3 shadow-sm rounded">
-              <h5 className="mb-1">{r.House?.name}</h5>
-              <p className="mb-1">{r.House?.location}</p>
-              <p className="mb-1">
-                <strong>Del:</strong>{" "}
-                {new Date(r.startDate).toLocaleDateString()}
-                <br />
-                <strong>Al:</strong> {new Date(r.endDate).toLocaleDateString()}
-              </p>
-              <p className="mb-1">
-                <strong>Estado:</strong> {r.status}
-              </p>
+            <div key={r.id} className="col-md-6 mb-4">
+              <div className="card shadow-sm h-100">
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{r.House?.name}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">
+                    {r.House?.location}
+                  </h6>
+                  <p className="card-text">
+                    <strong>Del:</strong>{" "}
+                    {new Date(r.startDate).toLocaleDateString()} <br />
+                    <strong>Al:</strong>{" "}
+                    {new Date(r.endDate).toLocaleDateString()}
+                  </p>
+                  <p className="card-text">
+                    <strong>Estado:</strong> {r.status}
+                  </p>
 
-              {r.status === "pending" && new Date(r.startDate) > new Date() && (
-                <div className="d-flex gap-2 mt-2">
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => handlePayment(r.id)}
-                  >
-                    Pagar
-                  </button>
-                  <button
-                    className="btn btn-outline-danger btn-sm"
-                    onClick={() => handleCancel(r.id)}
-                  >
-                    Cancelar
-                  </button>
+                  {r.status === "pending" &&
+                    new Date(r.startDate) > new Date() && (
+                      <div className="mt-auto d-flex gap-2">
+                        <button
+                          className="btn btn-outline-success btn-sm"
+                          onClick={() => handlePayment(r.id)}
+                        >
+                          Pagar
+                        </button>
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleCancel(r.id)}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    )}
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

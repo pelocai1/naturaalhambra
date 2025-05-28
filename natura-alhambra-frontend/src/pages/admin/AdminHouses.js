@@ -1,25 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import api from '../../services/api';
+import React, { useEffect, useRef, useState } from "react";
+import api from "../../services/api";
 
 function AdminHouses() {
   const [houses, setHouses] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
-    name: '',
-    location: '',
-    description: '',
-    price: '',
-    capacity: '',
-    image: null
+    name: "",
+    location: "",
+    description: "",
+    price: "",
+    capacity: "",
+    image: null,
   });
   const [editingHouse, setEditingHouse] = useState(null);
-  const imageRef = useRef(); // Referencia para el input de imagen
+  const imageRef = useRef();
 
   const fetchHouses = async () => {
     try {
-      const res = await api.get('/admin/houses');
-      const list = res.data.houses ?? res.data.data ?? res.data;   // admite ambos formatos
-                    setHouses(Array.isArray(list) ? list : []);
+      const res = await api.get("/admin/houses");
+      const list = res.data.houses ?? res.data.data ?? res.data;
+      setHouses(Array.isArray(list) ? list : []);
     } catch {
       setHouses([]);
     }
@@ -30,7 +30,7 @@ function AdminHouses() {
   }, []);
 
   const handleChange = (e) => {
-    if (e.target.name === 'image') {
+    if (e.target.name === "image") {
       setForm({ ...form, image: e.target.files[0] });
     } else {
       setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,7 +42,7 @@ function AdminHouses() {
 
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => {
-      if (value !== null && value !== '') {
+      if (value !== null && value !== "") {
         data.append(key, value);
       }
     });
@@ -50,28 +50,28 @@ function AdminHouses() {
     try {
       if (editingHouse) {
         await api.put(`/admin/houses/${editingHouse.id}`, data);
-        setMessage('Casa actualizada');
+        setMessage("Casa actualizada");
       } else {
-        await api.post('/admin/houses', data);
-        setMessage('Casa creada');
+        await api.post("/admin/houses", data);
+        setMessage("Casa creada");
       }
 
       setForm({
-        name: '',
-        location: '',
-        description: '',
-        price: '',
-        capacity: '',
-        image: null
+        name: "",
+        location: "",
+        description: "",
+        price: "",
+        capacity: "",
+        image: null,
       });
       setEditingHouse(null);
       fetchHouses();
 
       if (imageRef.current) {
-        imageRef.current.value = ''; // Limpiar el input de archivo
+        imageRef.current.value = "";
       }
     } catch {
-      setMessage('Error al guardar la casa');
+      setMessage("Error al guardar la casa");
     }
   };
 
@@ -80,7 +80,7 @@ function AdminHouses() {
       await api.put(`/admin/houses/${id}/toggle`);
       fetchHouses();
     } catch {
-      setMessage('Error al cambiar disponibilidad');
+      setMessage("Error al cambiar disponibilidad");
     }
   };
 
@@ -92,51 +92,135 @@ function AdminHouses() {
       description: house.description,
       price: house.price,
       capacity: house.capacity,
-      image: null
+      image: null,
     });
-
-    if (imageRef.current) {
-      imageRef.current.value = '';
-    }
+    if (imageRef.current) imageRef.current.value = "";
   };
 
   return (
-    <div>
-      <h4>Casas registradas</h4>
-      <ul className="list-group mb-4">
-        {houses.map((house) => (
-          <li key={house.id} className="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <strong>{house.name}</strong> – {house.location}<br />
-              <small>{house.description}</small><br />
-              Capacidad: {house.capacity} | {house.price} € / noche
-            </div>
-            <div>
-              <span className={`badge ${house.availability ? 'bg-success' : 'bg-secondary'} me-2`}>
-                {house.availability ? 'Activa' : 'Inactiva'}
-              </span>
-              <button onClick={() => toggleAvailability(house.id)} className="btn btn-sm btn-outline-warning me-2">
-                Cambiar
-              </button>
-              <button onClick={() => handleEdit(house)} className="btn btn-sm btn-outline-primary">
-                Editar
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div
+      className="mt-4"
+      style={{
+        backgroundColor: "#f8f9fa",
+        minHeight: "100vh",
+        padding: "20px",
+      }}
+    >
+      <h4 className="mb-4">Casas registradas</h4>
 
-      <h5>{editingHouse ? 'Editar casa' : 'Añadir nueva casa'}</h5>
+      <div className="row">
+        {houses.map((house) => (
+          <div key={house.id} className="col-md-6 mb-4">
+            <div
+              className="card h-100 shadow-sm border-0"
+              style={{ backgroundColor: "#e9f5e1" }}
+            >
+              <div className="card-body">
+                <h5 className="card-title">{house.name}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">
+                  {house.location}
+                </h6>
+                <p className="card-text">{house.description}</p>
+                <p className="card-text">
+                  <strong>Capacidad:</strong> {house.capacity} |{" "}
+                  <strong>Precio:</strong> {house.price} €
+                </p>
+                <div className="d-flex justify-content-between align-items-center">
+                  <span
+                    className={`badge ${
+                      house.availability ? "bg-success" : "bg-secondary"
+                    }`}
+                  >
+                    {house.availability ? "Activa" : "Inactiva"}
+                  </span>
+                  <div>
+                    <button
+                      onClick={() => toggleAvailability(house.id)}
+                      className="btn btn-sm btn-outline-warning me-2"
+                    >
+                      Cambiar
+                    </button>
+                    <button
+                      onClick={() => handleEdit(house)}
+                      className="btn btn-sm btn-outline-primary"
+                    >
+                      Editar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <hr className="my-5" />
+
+      <h5 className="mb-3">
+        {editingHouse ? "Editar casa" : "Añadir nueva casa"}
+      </h5>
       {message && <div className="alert alert-info">{message}</div>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input name="name" className="form-control mb-2" placeholder="Nombre" value={form.name} onChange={handleChange} required />
-        <input name="location" className="form-control mb-2" placeholder="Ubicación" value={form.location} onChange={handleChange} required />
-        <textarea name="description" className="form-control mb-2" placeholder="Descripción" value={form.description} onChange={handleChange} required />
-        <input type="number" name="price" className="form-control mb-2" placeholder="Precio por noche" value={form.price} onChange={handleChange} required />
-        <input type="number" name="capacity" className="form-control mb-2" placeholder="Capacidad (número de personas)" value={form.capacity} onChange={handleChange} required />
-        <input type="file" name="image" className="form-control mb-2" onChange={handleChange} accept="image/*" ref={imageRef} />
-        <button className="btn btn-primary">{editingHouse ? 'Guardar cambios' : 'Crear casa'}</button>
-      </form>
+
+      <div
+        className="card p-4 shadow-sm mb-5 border-0"
+        style={{ maxWidth: "600px", backgroundColor: "#e9f5e1" }}
+      >
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <input
+            name="name"
+            className="form-control mb-3"
+            placeholder="Nombre"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="location"
+            className="form-control mb-3"
+            placeholder="Ubicación"
+            value={form.location}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            name="description"
+            className="form-control mb-3"
+            placeholder="Descripción"
+            value={form.description}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="number"
+            name="price"
+            className="form-control mb-3"
+            placeholder="Precio por noche"
+            value={form.price}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="number"
+            name="capacity"
+            className="form-control mb-3"
+            placeholder="Capacidad (personas)"
+            value={form.capacity}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="file"
+            name="image"
+            className="form-control mb-3"
+            onChange={handleChange}
+            accept="image/*"
+            ref={imageRef}
+          />
+          <button className="btn btn-success">
+            {editingHouse ? "Guardar cambios" : "Crear casa"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
